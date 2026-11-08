@@ -1,0 +1,33 @@
+{
+  "ts": "2026-10-12T01:14:13.350005+08:00",
+  "items": [
+    {
+      "ts": "",
+      "title": "[抖音热榜] 纯过日子就是好好生活",
+      "src": "douyin-hot",
+      "hot_value": 12143544,
+      "note_count": null,
+      "digest": "热度:12143544 "
+    },
+    {
+      "ts": "",
+      "title": "[抖音热榜] 郑钦文首夺中网女单冠军",
+      "src": "douyin-hot",
+      "hot_value": 12096062,
+      "note_count": null,
+      "digest": "热度:12096062 "
+    },
+    {
+      "ts": "",
+      "title": "[抖音热榜] 2026世界市长对话洛阳",
+      "src": "douyin-hot",
+      "hot_value": 11691329,
+      "note_count": null,
+      "digest": "热度:11691329 "
+    }
+  ],
+  "meta": {
+    "source": "kol-collector-v1",
+    "zero_cred": true
+  }
+}
