@@ -8,18 +8,22 @@ on:
   workflow_dispatch: {}
 permissions:
   contents: write
+concurrency:
+  group: auto-kol-collector
+  cancel-in-progress: false
 jobs:
   collect:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
       TZ: Asia/Shanghai
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: recursive
-      - uses: actions/setup-python@v5
+          submodules: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.x'
       - name: Collect KOL & platform news
@@ -102,9 +106,11 @@ jobs:
           # dedup + 排序
           items.sort(key=lambda x: x.get("ts","") or "", reverse=True)
           print(f"[kol-collector] {len(items)} items", flush=True)
+          if not items:
+              raise SystemExit('No public news retrieved; refusing to overwrite the previous archive')
 
           # 写 MD
-          md=["# KOL & 平台热榜 财经新闻 {date_str}", "",
+          md=[f"# KOL & 平台热榜 财经新闻 {date_str}", "",
               f"- 生成: {now.strftime('%Y-%m-%d %H:%M')} · 抖音热榜 + 新浪7x24 + 东财归档 · 零凭据"]
           for it in items[:50]:
               md.append(f"- [{it['ts']}] {it['title']}  \n  - 来源: {it['src']}  \n  - {it['digest'][:100]}")
@@ -122,7 +128,7 @@ jobs:
         run: |
           git config user.name "kol-bot"
           git config user.email "kol-bot@users.noreply.github.com"
-          git add -A
+          git add -- news/
           ts=$(TZ=Asia/Shanghai date '+%Y%m%d_%H%M')
           git diff --quiet HEAD && echo "no changes" || {
             git commit -m "auto-kol $ts" && \
